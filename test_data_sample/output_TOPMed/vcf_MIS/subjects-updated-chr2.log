@@ -1,0 +1,26 @@
+PLINK v1.90b7 64-bit (16 Jan 2023)
+Options in effect:
+  --bfile plink_snp_cr/subjects-updated
+  --chr 2
+  --out vcf_MIS/subjects-updated-chr2
+  --output-chr chrMT
+  --real-ref-alleles
+  --recode vcf-iid
+
+Hostname: node003
+Working directory: /mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_TOPMed
+Start time: Thu Jul 25 11:49:25 2024
+
+Random number seed: 1721922565
+515501 MB RAM detected; reserving 257750 MB for main workspace.
+931 out of 10787 variants loaded from .bim file.
+238 people (151 males, 87 females) loaded from .fam.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 238 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.99764.
+931 variants and 238 people pass filters and QC.
+Note: No phenotypes present.
+--recode vcf-iid to vcf_MIS/subjects-updated-chr2.vcf ... done.
+
+End time: Thu Jul 25 11:49:25 2024

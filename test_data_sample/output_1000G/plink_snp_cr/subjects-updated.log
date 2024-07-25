@@ -1,0 +1,34 @@
+PLINK v1.90b7 64-bit (16 Jan 2023)
+Options in effect:
+  --a2-allele /mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_1000G/plink_snp_cr/Force-Allele1-subjects-1000G.txt
+  --bfile /mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_1000G/plink_snp_cr/TEMP4
+  --make-bed
+  --out /mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_1000G/plink_snp_cr/subjects-updated
+
+Hostname: node001
+Working directory: /mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_1000G
+Start time: Thu Jul 25 11:44:04 2024
+
+Random number seed: 1721922244
+515501 MB RAM detected; reserving 257750 MB for main workspace.
+513228 variants loaded from .bim file.
+238 people (151 males, 87 females) loaded from .fam.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 238 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Warning: 3166 het. haploid genotypes present (see
+/mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_1000G/plink_snp_cr/subjects-updated.hh
+); many commands treat these as missing.
+Total genotyping rate is 0.997262.
+--a2-allele: 513228 assignments made.
+513228 variants and 238 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+/mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_1000G/plink_snp_cr/subjects-updated.bed
++
+/mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_1000G/plink_snp_cr/subjects-updated.bim
++
+/mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_1000G/plink_snp_cr/subjects-updated.fam
+... done.
+
+End time: Thu Jul 25 11:44:05 2024

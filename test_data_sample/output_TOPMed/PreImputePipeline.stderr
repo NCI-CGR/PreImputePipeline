@@ -1,0 +1,790 @@
+Config file config.yaml is extended by additional config specified via the command line.
+Config file config.yaml is extended by additional config specified via the command line.
+Unlocking working directory.
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 300
+Job stats:
+job                    count    min threads    max threads
+-------------------  -------  -------------  -------------
+HRC_check                  1              1              1
+all                        1              1              1
+liftover                   1              1              1
+move_vcf                  23              1              1
+plink_freq                 1              1              1
+plink_snp_cr_maf           1              1              1
+plink_snp_hwe              1              1              1
+plink_sub_call_rate        1              1              1
+update_chr_notation        1              1              1
+zip                       23              1              1
+total                     54              1              1
+
+Select jobs to execute...
+
+[Thu Jul 25 11:41:02 2024]
+rule update_chr_notation:
+    input: /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/input/subjects.bed, /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/input/subjects.fam, /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/input/subjects.bim
+    output: update_chr_notation/subjects.bed, update_chr_notation/subjects.bim, update_chr_notation/subjects.fam
+    jobid: 6
+    reason: Missing output files: update_chr_notation/subjects.bim, update_chr_notation/subjects.fam, update_chr_notation/subjects.bed
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+module load plink/1.9;plink --bfile /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/input/subjects --output-chr MT --make-bed --out update_chr_notation/subjects
+Submitted job 6 with external jobid 'Submitted batch job 1568280'.
+[Thu Jul 25 11:41:12 2024]
+Finished job 6.
+1 of 54 steps (2%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:41:12 2024]
+rule liftover:
+    input: update_chr_notation/subjects.bed, update_chr_notation/subjects.fam, update_chr_notation/subjects.bim, /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/Ref_files/liftOver_files/hg19ToHg38.over.chain, /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/tools/liftOver
+    output: build38/liftover.bed, build38/subjects_lifted.bed, build38/subjects_unlifted.bed, build38/subjects_lifted_map.txt, build38/subjects.bed, build38/subjects.bim, build38/subjects.fam
+    jobid: 5
+    reason: Missing output files: build38/subjects.bim, build38/subjects.fam, build38/subjects.bed; Input files updated by another job: update_chr_notation/subjects.bim, update_chr_notation/subjects.fam, update_chr_notation/subjects.bed
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 5 with external jobid 'Submitted batch job 1568282'.
+[Thu Jul 25 11:41:22 2024]
+Finished job 5.
+2 of 54 steps (4%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:41:22 2024]
+rule plink_sub_call_rate:
+    input: build38/subjects.bed, build38/subjects.bim, build38/subjects.fam
+    output: plink_sub_cr/subjects.bed, plink_sub_cr/subjects.bim, plink_sub_cr/subjects.fam
+    jobid: 4
+    reason: Missing output files: plink_sub_cr/subjects.bed, plink_sub_cr/subjects.bim, plink_sub_cr/subjects.fam; Input files updated by another job: build38/subjects.bim, build38/subjects.fam, build38/subjects.bed
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+module load plink/1.9;plink --bfile build38/subjects --mind 0.05 --make-bed --out plink_sub_cr/subjects
+Submitted job 4 with external jobid 'Submitted batch job 1568284'.
+[Thu Jul 25 11:41:32 2024]
+Finished job 4.
+3 of 54 steps (6%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:41:32 2024]
+rule plink_snp_cr_maf:
+    input: plink_sub_cr/subjects.bed, plink_sub_cr/subjects.bim, plink_sub_cr/subjects.fam
+    output: plink_snp_cr/subjects.maf.geno.bed, plink_snp_cr/subjects.maf.geno.bim, plink_snp_cr/subjects.maf.geno.fam
+    jobid: 3
+    reason: Missing output files: plink_snp_cr/subjects.maf.geno.bim, plink_snp_cr/subjects.maf.geno.fam, plink_snp_cr/subjects.maf.geno.bed; Input files updated by another job: plink_sub_cr/subjects.bed, plink_sub_cr/subjects.bim, plink_sub_cr/subjects.fam
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+module load plink/1.9;plink --bfile plink_sub_cr/subjects --geno 0.05 --impute-sex --maf 0.01 --make-bed --out plink_snp_cr/subjects.maf.geno
+Submitted job 3 with external jobid 'Submitted batch job 1568286'.
+[Thu Jul 25 11:41:42 2024]
+Finished job 3.
+4 of 54 steps (7%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:41:42 2024]
+rule plink_snp_hwe:
+    input: plink_snp_cr/subjects.maf.geno.bed, plink_snp_cr/subjects.maf.geno.bim, plink_snp_cr/subjects.maf.geno.fam
+    output: plink_snp_cr/subjects.bed, plink_snp_cr/subjects.bim, plink_snp_cr/subjects.fam
+    jobid: 2
+    reason: Missing output files: plink_snp_cr/subjects.bed, plink_snp_cr/subjects.fam, plink_snp_cr/subjects.bim; Input files updated by another job: plink_snp_cr/subjects.maf.geno.bim, plink_snp_cr/subjects.maf.geno.fam, plink_snp_cr/subjects.maf.geno.bed
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+module load plink/1.9;plink --bfile plink_snp_cr/subjects.maf.geno --hwe 1e-06 --make-bed --out plink_snp_cr/subjects
+Submitted job 2 with external jobid 'Submitted batch job 1568288'.
+[Thu Jul 25 11:41:52 2024]
+Finished job 2.
+5 of 54 steps (9%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:41:52 2024]
+rule plink_freq:
+    input: plink_snp_cr/subjects.bed, plink_snp_cr/subjects.bim, plink_snp_cr/subjects.fam
+    output: plink_afterQC_freq/subjects.frq
+    jobid: 7
+    reason: Missing output files: plink_afterQC_freq/subjects.frq; Input files updated by another job: plink_snp_cr/subjects.bed, plink_snp_cr/subjects.fam, plink_snp_cr/subjects.bim
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+module load plink/1.9;plink --bfile plink_snp_cr/subjects --freq --out plink_afterQC_freq/subjects
+Submitted job 7 with external jobid 'Submitted batch job 1568289'.
+[Thu Jul 25 11:42:02 2024]
+Finished job 7.
+6 of 54 steps (11%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:42:02 2024]
+rule HRC_check:
+    input: plink_snp_cr/subjects.bim, plink_afterQC_freq/subjects.frq, /DCEG/CGF/Bioinformatics/Production/software/PreImputePipeline/Ref_files/TOPMed/PASS.Variants.TOPMed_freeze5_hg38_dbSNP.tab.gz, /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/tools/HRC-1000G-check-bim.pl
+    output: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    jobid: 1
+    reason: Missing output files: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed; Input files updated by another job: plink_afterQC_freq/subjects.frq, plink_snp_cr/subjects.bim
+    resources: mem_mb=7687, mem_mib=7331, disk_mb=7687, disk_mib=7331, tmpdir=<TBD>
+
+Submitted job 1 with external jobid 'Submitted batch job 1568290'.
+[Thu Jul 25 11:49:22 2024]
+Finished job 1.
+7 of 54 steps (13%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:49:22 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr12.vcf
+    jobid: 31
+    reason: Missing output files: vcf_MIS/subjects-updated-chr12.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=12
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 31 with external jobid 'Submitted batch job 1568338'.
+
+[Thu Jul 25 11:49:22 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr16.vcf
+    jobid: 39
+    reason: Missing output files: vcf_MIS/subjects-updated-chr16.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=16
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 39 with external jobid 'Submitted batch job 1568339'.
+
+[Thu Jul 25 11:49:22 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr1.vcf
+    jobid: 9
+    reason: Missing output files: vcf_MIS/subjects-updated-chr1.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 9 with external jobid 'Submitted batch job 1568340'.
+
+[Thu Jul 25 11:49:22 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr5.vcf
+    jobid: 17
+    reason: Missing output files: vcf_MIS/subjects-updated-chr5.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=5
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 17 with external jobid 'Submitted batch job 1568341'.
+
+[Thu Jul 25 11:49:22 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr20.vcf
+    jobid: 47
+    reason: Missing output files: vcf_MIS/subjects-updated-chr20.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=20
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 47 with external jobid 'Submitted batch job 1568342'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr9.vcf
+    jobid: 25
+    reason: Missing output files: vcf_MIS/subjects-updated-chr9.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=9
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 25 with external jobid 'Submitted batch job 1568343'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr13.vcf
+    jobid: 33
+    reason: Missing output files: vcf_MIS/subjects-updated-chr13.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=13
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 33 with external jobid 'Submitted batch job 1568344'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr17.vcf
+    jobid: 41
+    reason: Missing output files: vcf_MIS/subjects-updated-chr17.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=17
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 41 with external jobid 'Submitted batch job 1568345'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr2.vcf
+    jobid: 11
+    reason: Missing output files: vcf_MIS/subjects-updated-chr2.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=2
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 11 with external jobid 'Submitted batch job 1568346'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr6.vcf
+    jobid: 19
+    reason: Missing output files: vcf_MIS/subjects-updated-chr6.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=6
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 19 with external jobid 'Submitted batch job 1568347'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr21.vcf
+    jobid: 49
+    reason: Missing output files: vcf_MIS/subjects-updated-chr21.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=21
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 49 with external jobid 'Submitted batch job 1568348'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr10.vcf
+    jobid: 27
+    reason: Missing output files: vcf_MIS/subjects-updated-chr10.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=10
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 27 with external jobid 'Submitted batch job 1568349'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr14.vcf
+    jobid: 35
+    reason: Missing output files: vcf_MIS/subjects-updated-chr14.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=14
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 35 with external jobid 'Submitted batch job 1568350'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr18.vcf
+    jobid: 43
+    reason: Missing output files: vcf_MIS/subjects-updated-chr18.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=18
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 43 with external jobid 'Submitted batch job 1568351'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr3.vcf
+    jobid: 13
+    reason: Missing output files: vcf_MIS/subjects-updated-chr3.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=3
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 13 with external jobid 'Submitted batch job 1568352'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr7.vcf
+    jobid: 21
+    reason: Missing output files: vcf_MIS/subjects-updated-chr7.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=7
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 21 with external jobid 'Submitted batch job 1568353'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr22.vcf
+    jobid: 51
+    reason: Missing output files: vcf_MIS/subjects-updated-chr22.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=22
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 51 with external jobid 'Submitted batch job 1568354'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr11.vcf
+    jobid: 29
+    reason: Missing output files: vcf_MIS/subjects-updated-chr11.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=11
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 29 with external jobid 'Submitted batch job 1568355'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr15.vcf
+    jobid: 37
+    reason: Missing output files: vcf_MIS/subjects-updated-chr15.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=15
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 37 with external jobid 'Submitted batch job 1568356'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr19.vcf
+    jobid: 45
+    reason: Missing output files: vcf_MIS/subjects-updated-chr19.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=19
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 45 with external jobid 'Submitted batch job 1568357'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr4.vcf
+    jobid: 15
+    reason: Missing output files: vcf_MIS/subjects-updated-chr4.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 15 with external jobid 'Submitted batch job 1568358'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr8.vcf
+    jobid: 23
+    reason: Missing output files: vcf_MIS/subjects-updated-chr8.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=8
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 23 with external jobid 'Submitted batch job 1568359'.
+
+[Thu Jul 25 11:49:23 2024]
+rule move_vcf:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam
+    output: vcf_MIS/subjects-updated-chr23.vcf
+    jobid: 53
+    reason: Missing output files: vcf_MIS/subjects-updated-chr23.vcf; Input files updated by another job: plink_snp_cr/subjects-updated.fam, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.bed
+    wildcards: chrom=23
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 53 with external jobid 'Submitted batch job 1568360'.
+[Thu Jul 25 11:49:32 2024]
+Finished job 31.
+8 of 54 steps (15%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:49:32 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr12.vcf
+    output: vcf_MIS/subjects-updated-chr12.vcf.gz
+    jobid: 30
+    reason: Missing output files: vcf_MIS/subjects-updated-chr12.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr12.vcf
+    wildcards: chrom=12
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 30 with external jobid 'Submitted batch job 1568361'.
+[Thu Jul 25 11:49:32 2024]
+Finished job 39.
+9 of 54 steps (17%) done
+[Thu Jul 25 11:49:32 2024]
+Finished job 9.
+10 of 54 steps (19%) done
+[Thu Jul 25 11:49:32 2024]
+Finished job 17.
+11 of 54 steps (20%) done
+[Thu Jul 25 11:49:32 2024]
+Finished job 47.
+12 of 54 steps (22%) done
+[Thu Jul 25 11:49:32 2024]
+Finished job 25.
+13 of 54 steps (24%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:49:32 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr5.vcf
+    output: vcf_MIS/subjects-updated-chr5.vcf.gz
+    jobid: 16
+    reason: Missing output files: vcf_MIS/subjects-updated-chr5.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr5.vcf
+    wildcards: chrom=5
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 16 with external jobid 'Submitted batch job 1568362'.
+
+[Thu Jul 25 11:49:33 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr20.vcf
+    output: vcf_MIS/subjects-updated-chr20.vcf.gz
+    jobid: 46
+    reason: Missing output files: vcf_MIS/subjects-updated-chr20.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr20.vcf
+    wildcards: chrom=20
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 46 with external jobid 'Submitted batch job 1568363'.
+
+[Thu Jul 25 11:49:33 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr9.vcf
+    output: vcf_MIS/subjects-updated-chr9.vcf.gz
+    jobid: 24
+    reason: Missing output files: vcf_MIS/subjects-updated-chr9.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr9.vcf
+    wildcards: chrom=9
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 24 with external jobid 'Submitted batch job 1568364'.
+
+[Thu Jul 25 11:49:33 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr16.vcf
+    output: vcf_MIS/subjects-updated-chr16.vcf.gz
+    jobid: 38
+    reason: Missing output files: vcf_MIS/subjects-updated-chr16.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr16.vcf
+    wildcards: chrom=16
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 38 with external jobid 'Submitted batch job 1568365'.
+
+[Thu Jul 25 11:49:33 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr1.vcf
+    output: vcf_MIS/subjects-updated-chr1.vcf.gz
+    jobid: 8
+    reason: Missing output files: vcf_MIS/subjects-updated-chr1.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr1.vcf
+    wildcards: chrom=1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 8 with external jobid 'Submitted batch job 1568366'.
+[Thu Jul 25 11:49:33 2024]
+Finished job 33.
+14 of 54 steps (26%) done
+[Thu Jul 25 11:49:33 2024]
+Finished job 41.
+15 of 54 steps (28%) done
+[Thu Jul 25 11:49:33 2024]
+Finished job 11.
+16 of 54 steps (30%) done
+[Thu Jul 25 11:49:33 2024]
+Finished job 19.
+17 of 54 steps (31%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:49:33 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr13.vcf
+    output: vcf_MIS/subjects-updated-chr13.vcf.gz
+    jobid: 32
+    reason: Missing output files: vcf_MIS/subjects-updated-chr13.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr13.vcf
+    wildcards: chrom=13
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 32 with external jobid 'Submitted batch job 1568367'.
+
+[Thu Jul 25 11:49:33 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr2.vcf
+    output: vcf_MIS/subjects-updated-chr2.vcf.gz
+    jobid: 10
+    reason: Missing output files: vcf_MIS/subjects-updated-chr2.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr2.vcf
+    wildcards: chrom=2
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 10 with external jobid 'Submitted batch job 1568368'.
+
+[Thu Jul 25 11:49:33 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr6.vcf
+    output: vcf_MIS/subjects-updated-chr6.vcf.gz
+    jobid: 18
+    reason: Missing output files: vcf_MIS/subjects-updated-chr6.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr6.vcf
+    wildcards: chrom=6
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 18 with external jobid 'Submitted batch job 1568369'.
+
+[Thu Jul 25 11:49:33 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr17.vcf
+    output: vcf_MIS/subjects-updated-chr17.vcf.gz
+    jobid: 40
+    reason: Missing output files: vcf_MIS/subjects-updated-chr17.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr17.vcf
+    wildcards: chrom=17
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 40 with external jobid 'Submitted batch job 1568370'.
+[Thu Jul 25 11:49:33 2024]
+Finished job 49.
+18 of 54 steps (33%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:49:33 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr21.vcf
+    output: vcf_MIS/subjects-updated-chr21.vcf.gz
+    jobid: 48
+    reason: Missing output files: vcf_MIS/subjects-updated-chr21.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr21.vcf
+    wildcards: chrom=21
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 48 with external jobid 'Submitted batch job 1568371'.
+[Thu Jul 25 11:49:33 2024]
+Finished job 27.
+19 of 54 steps (35%) done
+[Thu Jul 25 11:49:33 2024]
+Finished job 35.
+20 of 54 steps (37%) done
+[Thu Jul 25 11:49:33 2024]
+Finished job 43.
+21 of 54 steps (39%) done
+[Thu Jul 25 11:49:33 2024]
+Finished job 13.
+22 of 54 steps (41%) done
+[Thu Jul 25 11:49:33 2024]
+Finished job 21.
+23 of 54 steps (43%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:49:33 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr7.vcf
+    output: vcf_MIS/subjects-updated-chr7.vcf.gz
+    jobid: 20
+    reason: Missing output files: vcf_MIS/subjects-updated-chr7.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr7.vcf
+    wildcards: chrom=7
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 20 with external jobid 'Submitted batch job 1568372'.
+
+[Thu Jul 25 11:49:34 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr10.vcf
+    output: vcf_MIS/subjects-updated-chr10.vcf.gz
+    jobid: 26
+    reason: Missing output files: vcf_MIS/subjects-updated-chr10.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr10.vcf
+    wildcards: chrom=10
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 26 with external jobid 'Submitted batch job 1568373'.
+
+[Thu Jul 25 11:49:34 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr14.vcf
+    output: vcf_MIS/subjects-updated-chr14.vcf.gz
+    jobid: 34
+    reason: Missing output files: vcf_MIS/subjects-updated-chr14.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr14.vcf
+    wildcards: chrom=14
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 34 with external jobid 'Submitted batch job 1568374'.
+
+[Thu Jul 25 11:49:34 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr18.vcf
+    output: vcf_MIS/subjects-updated-chr18.vcf.gz
+    jobid: 42
+    reason: Missing output files: vcf_MIS/subjects-updated-chr18.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr18.vcf
+    wildcards: chrom=18
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 42 with external jobid 'Submitted batch job 1568375'.
+
+[Thu Jul 25 11:49:34 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr3.vcf
+    output: vcf_MIS/subjects-updated-chr3.vcf.gz
+    jobid: 12
+    reason: Missing output files: vcf_MIS/subjects-updated-chr3.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr3.vcf
+    wildcards: chrom=3
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 12 with external jobid 'Submitted batch job 1568376'.
+[Thu Jul 25 11:49:34 2024]
+Finished job 51.
+24 of 54 steps (44%) done
+[Thu Jul 25 11:49:34 2024]
+Finished job 29.
+25 of 54 steps (46%) done
+[Thu Jul 25 11:49:34 2024]
+Finished job 37.
+26 of 54 steps (48%) done
+[Thu Jul 25 11:49:34 2024]
+Finished job 45.
+27 of 54 steps (50%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:49:34 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr22.vcf
+    output: vcf_MIS/subjects-updated-chr22.vcf.gz
+    jobid: 50
+    reason: Missing output files: vcf_MIS/subjects-updated-chr22.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr22.vcf
+    wildcards: chrom=22
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 50 with external jobid 'Submitted batch job 1568377'.
+
+[Thu Jul 25 11:49:34 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr19.vcf
+    output: vcf_MIS/subjects-updated-chr19.vcf.gz
+    jobid: 44
+    reason: Missing output files: vcf_MIS/subjects-updated-chr19.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr19.vcf
+    wildcards: chrom=19
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 44 with external jobid 'Submitted batch job 1568378'.
+
+[Thu Jul 25 11:49:34 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr15.vcf
+    output: vcf_MIS/subjects-updated-chr15.vcf.gz
+    jobid: 36
+    reason: Missing output files: vcf_MIS/subjects-updated-chr15.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr15.vcf
+    wildcards: chrom=15
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 36 with external jobid 'Submitted batch job 1568379'.
+
+[Thu Jul 25 11:49:34 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr11.vcf
+    output: vcf_MIS/subjects-updated-chr11.vcf.gz
+    jobid: 28
+    reason: Missing output files: vcf_MIS/subjects-updated-chr11.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr11.vcf
+    wildcards: chrom=11
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 28 with external jobid 'Submitted batch job 1568380'.
+[Thu Jul 25 11:49:34 2024]
+Finished job 15.
+28 of 54 steps (52%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:49:34 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr4.vcf
+    output: vcf_MIS/subjects-updated-chr4.vcf.gz
+    jobid: 14
+    reason: Missing output files: vcf_MIS/subjects-updated-chr4.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr4.vcf
+    wildcards: chrom=4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 14 with external jobid 'Submitted batch job 1568381'.
+[Thu Jul 25 11:49:34 2024]
+Finished job 23.
+29 of 54 steps (54%) done
+[Thu Jul 25 11:49:35 2024]
+Finished job 53.
+30 of 54 steps (56%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:49:35 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr8.vcf
+    output: vcf_MIS/subjects-updated-chr8.vcf.gz
+    jobid: 22
+    reason: Missing output files: vcf_MIS/subjects-updated-chr8.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr8.vcf
+    wildcards: chrom=8
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 22 with external jobid 'Submitted batch job 1568382'.
+
+[Thu Jul 25 11:49:35 2024]
+rule zip:
+    input: vcf_MIS/subjects-updated-chr23.vcf
+    output: vcf_MIS/subjects-updated-chr23.vcf.gz
+    jobid: 52
+    reason: Missing output files: vcf_MIS/subjects-updated-chr23.vcf.gz; Input files updated by another job: vcf_MIS/subjects-updated-chr23.vcf
+    wildcards: chrom=23
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 52 with external jobid 'Submitted batch job 1568383'.
+[Thu Jul 25 11:49:44 2024]
+Finished job 30.
+31 of 54 steps (57%) done
+[Thu Jul 25 11:49:44 2024]
+Finished job 16.
+32 of 54 steps (59%) done
+[Thu Jul 25 11:49:44 2024]
+Finished job 46.
+33 of 54 steps (61%) done
+[Thu Jul 25 11:49:44 2024]
+Finished job 24.
+34 of 54 steps (63%) done
+[Thu Jul 25 11:49:45 2024]
+Finished job 38.
+35 of 54 steps (65%) done
+[Thu Jul 25 11:49:45 2024]
+Finished job 8.
+36 of 54 steps (67%) done
+[Thu Jul 25 11:49:45 2024]
+Finished job 32.
+37 of 54 steps (69%) done
+[Thu Jul 25 11:49:45 2024]
+Finished job 10.
+38 of 54 steps (70%) done
+[Thu Jul 25 11:49:45 2024]
+Finished job 18.
+39 of 54 steps (72%) done
+[Thu Jul 25 11:49:45 2024]
+Finished job 40.
+40 of 54 steps (74%) done
+[Thu Jul 25 11:49:45 2024]
+Finished job 48.
+41 of 54 steps (76%) done
+[Thu Jul 25 11:49:45 2024]
+Finished job 20.
+42 of 54 steps (78%) done
+[Thu Jul 25 11:49:45 2024]
+Finished job 26.
+43 of 54 steps (80%) done
+[Thu Jul 25 11:49:45 2024]
+Finished job 34.
+44 of 54 steps (81%) done
+[Thu Jul 25 11:49:46 2024]
+Finished job 42.
+45 of 54 steps (83%) done
+[Thu Jul 25 11:49:46 2024]
+Finished job 12.
+46 of 54 steps (85%) done
+[Thu Jul 25 11:49:46 2024]
+Finished job 50.
+47 of 54 steps (87%) done
+[Thu Jul 25 11:49:46 2024]
+Finished job 44.
+48 of 54 steps (89%) done
+[Thu Jul 25 11:49:46 2024]
+Finished job 36.
+49 of 54 steps (91%) done
+[Thu Jul 25 11:49:46 2024]
+Finished job 28.
+50 of 54 steps (93%) done
+[Thu Jul 25 11:49:46 2024]
+Finished job 14.
+51 of 54 steps (94%) done
+[Thu Jul 25 11:49:46 2024]
+Finished job 22.
+52 of 54 steps (96%) done
+[Thu Jul 25 11:49:46 2024]
+Finished job 52.
+53 of 54 steps (98%) done
+Select jobs to execute...
+
+[Thu Jul 25 11:49:46 2024]
+localrule all:
+    input: plink_snp_cr/subjects-updated.bed, plink_snp_cr/subjects-updated.bim, plink_snp_cr/subjects-updated.fam, vcf_MIS/subjects-updated-chr1.vcf.gz, vcf_MIS/subjects-updated-chr2.vcf.gz, vcf_MIS/subjects-updated-chr3.vcf.gz, vcf_MIS/subjects-updated-chr4.vcf.gz, vcf_MIS/subjects-updated-chr5.vcf.gz, vcf_MIS/subjects-updated-chr6.vcf.gz, vcf_MIS/subjects-updated-chr7.vcf.gz, vcf_MIS/subjects-updated-chr8.vcf.gz, vcf_MIS/subjects-updated-chr9.vcf.gz, vcf_MIS/subjects-updated-chr10.vcf.gz, vcf_MIS/subjects-updated-chr11.vcf.gz, vcf_MIS/subjects-updated-chr12.vcf.gz, vcf_MIS/subjects-updated-chr13.vcf.gz, vcf_MIS/subjects-updated-chr14.vcf.gz, vcf_MIS/subjects-updated-chr15.vcf.gz, vcf_MIS/subjects-updated-chr16.vcf.gz, vcf_MIS/subjects-updated-chr17.vcf.gz, vcf_MIS/subjects-updated-chr18.vcf.gz, vcf_MIS/subjects-updated-chr19.vcf.gz, vcf_MIS/subjects-updated-chr20.vcf.gz, vcf_MIS/subjects-updated-chr21.vcf.gz, vcf_MIS/subjects-updated-chr22.vcf.gz, vcf_MIS/subjects-updated-chr23.vcf.gz
+    jobid: 0
+    reason: Input files updated by another job: vcf_MIS/subjects-updated-chr9.vcf.gz, vcf_MIS/subjects-updated-chr3.vcf.gz, plink_snp_cr/subjects-updated.fam, vcf_MIS/subjects-updated-chr12.vcf.gz, plink_snp_cr/subjects-updated.bim, vcf_MIS/subjects-updated-chr11.vcf.gz, vcf_MIS/subjects-updated-chr19.vcf.gz, vcf_MIS/subjects-updated-chr15.vcf.gz, vcf_MIS/subjects-updated-chr13.vcf.gz, vcf_MIS/subjects-updated-chr6.vcf.gz, vcf_MIS/subjects-updated-chr18.vcf.gz, vcf_MIS/subjects-updated-chr5.vcf.gz, vcf_MIS/subjects-updated-chr16.vcf.gz, vcf_MIS/subjects-updated-chr17.vcf.gz, plink_snp_cr/subjects-updated.bed, vcf_MIS/subjects-updated-chr10.vcf.gz, vcf_MIS/subjects-updated-chr23.vcf.gz, vcf_MIS/subjects-updated-chr20.vcf.gz, vcf_MIS/subjects-updated-chr2.vcf.gz, vcf_MIS/subjects-updated-chr14.vcf.gz, vcf_MIS/subjects-updated-chr4.vcf.gz, vcf_MIS/subjects-updated-chr21.vcf.gz, vcf_MIS/subjects-updated-chr1.vcf.gz, vcf_MIS/subjects-updated-chr7.vcf.gz, vcf_MIS/subjects-updated-chr22.vcf.gz, vcf_MIS/subjects-updated-chr8.vcf.gz
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp
+
+[Thu Jul 25 11:49:46 2024]
+Finished job 0.
+54 of 54 steps (100%) done
+Complete log: .snakemake/log/2024-07-25T114101.185413.snakemake.log

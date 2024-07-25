@@ -1,0 +1,149 @@
+#!/usr/bin/python
+
+import os
+import sys
+import glob
+
+configfile: "config.yaml"
+
+
+CHROMS = []
+for i in range(1, 24):
+    CHROMS.append(str(i))
+
+
+
+rule build:
+    input:
+        plinkIn + '.bed',
+        plinkIn + '.bim',
+        plinkIn + '.fam'
+    params:
+        inp = plinkIn,
+        stInp = chainStrandIn,
+        updateBuild = reqScripts +'/' + 'update_build.sh',
+        out = 'build37/subjects'
+    output:
+        'build37/subjects.bed',
+        'build37/subjects.bim',
+        'build37/subjects.fam'
+    run:
+#        shell("chmod u+x update_build.sh")
+        shell("module load plink/1.9; {params.updateBuild} {params.inp} {params.stInp} {params.out}")
+
+
+rule plink_sub_call_rate:
+    input:
+        'build37/subjects.bed',
+        'build37/subjects.bim',
+        'build37/subjects.fam'
+    params:
+        inp = 'build37/subjects',
+        out = 'plink_sub_cr/subjects',
+        mind = config["mind"]
+    output:
+        'plink_sub_cr/subjects.bed',
+        'plink_sub_cr/subjects.bim',
+        'plink_sub_cr/subjects.fam'
+    shell:
+        'module load plink/1.9;plink --bfile {params.inp} --mind {params.mind} --make-bed --out {params.out}'
+
+
+rule plink_snp_cr_maf:
+    input:
+        'plink_sub_cr/subjects.bed',
+        'plink_sub_cr/subjects.bim',
+        'plink_sub_cr/subjects.fam'
+    params:
+        inp = 'plink_sub_cr/subjects',
+        out = 'plink_snp_cr/subjects.maf.geno',
+        geno = config["geno"],
+        maf = config["maf"]
+    output:
+        'plink_snp_cr/subjects.maf.geno.bed',
+        'plink_snp_cr/subjects.maf.geno.bim',
+        'plink_snp_cr/subjects.maf.geno.fam'
+    shell:
+        'module load plink/1.9;plink --bfile {params.inp} --geno {params.geno} --impute-sex --maf {params.maf} --make-bed --out {params.out}'
+
+
+rule plink_snp_hwe:
+    input:
+        'plink_snp_cr/subjects.maf.geno.bed',
+        'plink_snp_cr/subjects.maf.geno.bim',
+        'plink_snp_cr/subjects.maf.geno.fam'
+    params:
+        inp = 'plink_snp_cr/subjects.maf.geno',
+        out = 'plink_snp_cr/subjects',
+        hwe = config["hwe"],
+    output:
+        'plink_snp_cr/subjects.bed',
+        'plink_snp_cr/subjects.bim',
+        'plink_snp_cr/subjects.fam'
+    shell:
+        'module load plink/1.9;plink --bfile {params.inp} --hwe {params.hwe} --make-bed --out {params.out}'
+
+
+
+rule plink_freq:
+    input:
+        'plink_snp_cr/subjects.bed',
+        'plink_snp_cr/subjects.bim',
+        'plink_snp_cr/subjects.fam'
+    params:
+        inp = 'plink_snp_cr/subjects',
+        out = 'plink_afterQC_freq/subjects'
+    output:
+        'plink_afterQC_freq/subjects.frq'
+    shell:
+        'module load plink/1.9;plink --bfile {params.inp} --freq --out {params.out}'
+
+
+rule HRC_check:
+    input:
+        bim = 'plink_snp_cr/subjects.bim',
+        freq = 'plink_afterQC_freq/subjects.frq',
+        ref = config["ref_file"],
+        hrc1000G = reqScripts +'/' + 'HRC-1000G-check-bim.pl'
+    output:
+        'plink_snp_cr/subjects-updated.bed',
+        'plink_snp_cr/subjects-updated.bim',
+        'plink_snp_cr/subjects-updated.fam'
+    params:
+        out = 'plink_snp_cr/subjects-updated'
+    run:
+        if "HRC" in config['ref_file']:
+            shell("module load perl;perl {input.hrc1000G} -b {input.bim} -f {input.freq} -r {input.ref} -h")
+        elif "TOPMed" in config['ref_file']:
+            shell("module load perl;perl {input.hrc1000G} -b {input.bim} -f {input.freq} -r {input.ref} -h")
+        elif config['ref_file']:
+            shell("module load perl;perl {input.hrc1000G} -b {input.bim} -f {input.freq} -r {input.ref} -g -p {config[pop]}")
+        shell("chmod u+x plink_snp_cr/Run-plink.sh")
+        shell("""sed -i 's/rm\sTEMP*/rm\ \plink_snp_cr\/TEMP/g' plink_snp_cr/Run-plink.sh""")
+        shell("module load plink/1.9; plink_snp_cr/Run-plink.sh")
+
+
+rule move_vcf:
+    input:
+        'plink_snp_cr/subjects-updated.bed',
+        'plink_snp_cr/subjects-updated.bim',
+        'plink_snp_cr/subjects-updated.fam'
+    params:
+        inp = 'plink_snp_cr/subjects-updated',
+        out = 'vcf_MIS/subjects-updated-chr{chrom}',
+        chr = '{chrom}'
+    output:
+        'vcf_MIS/subjects-updated-chr{chrom}.vcf'
+    run:
+        'module load plink/1.9;'
+        'plink --bfile {params.inp} --real-ref-alleles --recode vcf-iid --chr {params.chr} --out {params.out}")'
+
+
+rule zip:
+    input:
+        'vcf_MIS/subjects-updated-chr{chrom}.vcf'
+    output:
+        'vcf_MIS/subjects-updated-chr{chrom}.vcf.gz'
+    run:
+        shell("module load bgzip; bgzip {input}")
+        shell("module load tabix; tabix -f -p vcf {output}")

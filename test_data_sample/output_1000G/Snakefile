@@ -1,0 +1,38 @@
+#!/usr/bin/python
+
+import os
+import sys
+import glob
+
+configfile: "config.yaml"
+
+CHROMS = []
+for i in range(1, 23):
+    CHROMS.append(str(i))
+
+
+plinkIn = config['plink_genotype_file']
+reqScripts = config['req_scripts']
+chainStrandIn = config['strand_chain_file']
+pop = config['pop']
+
+
+if config['strand_chain_file'][-7:] == '.strand':
+    include: 'modules/Snakefile_updateBuild'
+
+elif config['strand_chain_file'] == 'None':
+    include: 'modules/Snakefile_HRC_1KG'
+
+elif config['strand_chain_file']:
+    include: 'modules/Snakefile_liftover'
+
+
+
+rule all:
+    input:
+        expand('plink_snp_cr/subjects-updated.bed'),
+        expand('plink_snp_cr/subjects-updated.bim'),
+        expand('plink_snp_cr/subjects-updated.fam'),
+        #expand('plink_snp_cr/subjects-updated-chr{chrom}.vcf',chrom = CHROMS)
+        #expand('vcf_MIS/subjects-updated-chr{chrom}.vcf', chrom = CHROMS)
+        expand('vcf_MIS/subjects-updated-chr{chrom}.vcf.gz', chrom = CHROMS)

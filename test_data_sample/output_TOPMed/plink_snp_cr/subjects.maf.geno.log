@@ -1,0 +1,36 @@
+PLINK v1.90b7 64-bit (16 Jan 2023)
+Options in effect:
+  --bfile plink_sub_cr/subjects
+  --geno 0.05
+  --impute-sex
+  --maf 0.01
+  --make-bed
+  --out plink_snp_cr/subjects.maf.geno
+
+Hostname: node001
+Working directory: /mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_TOPMed
+Start time: Thu Jul 25 11:41:34 2024
+
+Random number seed: 1721922094
+515501 MB RAM detected; reserving 257750 MB for main workspace.
+725002 variants loaded from .bim file.
+238 people (0 males, 0 females, 238 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to plink_snp_cr/subjects.maf.geno.nosex .
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 238 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Warning: Nonmissing nonmale Y chromosome genotype(s) present; many commands
+treat these as missing.
+Total genotyping rate is 0.997201.
+3649 variants removed due to missing genotype data (--geno).
+116534 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+604819 variants and 238 people pass filters and QC.
+Note: No phenotypes present.
+--impute-sex: 13655 Xchr and 0 Ychr variant(s) scanned, all sexes imputed.
+Report written to plink_snp_cr/subjects.maf.geno.sexcheck .
+--make-bed to plink_snp_cr/subjects.maf.geno.bed +
+plink_snp_cr/subjects.maf.geno.bim + plink_snp_cr/subjects.maf.geno.fam ...
+done.
+
+End time: Thu Jul 25 11:41:36 2024

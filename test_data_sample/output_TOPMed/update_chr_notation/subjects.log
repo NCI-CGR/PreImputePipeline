@@ -1,0 +1,28 @@
+PLINK v1.90b7 64-bit (16 Jan 2023)
+Options in effect:
+  --bfile /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/input/subjects
+  --make-bed
+  --out update_chr_notation/subjects
+  --output-chr MT
+
+Hostname: node001
+Working directory: /mnt/nfs/gigantor/ifs/DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/output_TOPMed
+Start time: Thu Jul 25 11:41:04 2024
+
+Random number seed: 1721922064
+515501 MB RAM detected; reserving 257750 MB for main workspace.
+731687 variants loaded from .bim file.
+238 people (0 males, 0 females, 238 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to update_chr_notation/subjects.nosex .
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 238 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Warning: Nonmissing nonmale Y chromosome genotype(s) present; many commands
+treat these as missing.
+Total genotyping rate is 0.997201.
+731687 variants and 238 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to update_chr_notation/subjects.bed +
+update_chr_notation/subjects.bim + update_chr_notation/subjects.fam ... done.
+
+End time: Thu Jul 25 11:41:05 2024

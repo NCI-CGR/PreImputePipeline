@@ -1,0 +1,11 @@
+plink_genotype_file: /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/test_data_sample/input/subjects
+req_scripts: /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/tools
+strand_chain_file: /DCEG/CGF/Bioinformatics/Production/Shilpa/Scripts/PreImputePipeline/Ref_files/liftOver_files/hg19ToHg38.over.chain
+ref_file: /DCEG/CGF/Bioinformatics/Production/software/PreImputePipeline/Ref_files/TOPMed/PASS.Variants.TOPMed_freeze5_hg38_dbSNP.tab.gz
+mind: 0.05
+geno: 0.05
+hwe: 1e-06
+maf: 0.01
+pop: ALL
+num_samples: 238
+start_time: Thu Jul 25 11:40:58 2024
