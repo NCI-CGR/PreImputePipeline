@@ -1,0 +1,9 @@
+name: imputation
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - plink=1.9
+  - bcftools
+  - perl

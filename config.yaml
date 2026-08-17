@@ -1,0 +1,53 @@
+# ---------------------------------------------------------------------
+# REQUIRED INPUTS
+# ---------------------------------------------------------------------
+
+# PLINK input prefix (no .bed/.bim/.fam)
+plink_genotype_file: "/path/to/subjects"
+
+# Folder containing required scripts:
+# - triple-liftOver-main/
+# - HRC-1000G-check-bim.pl
+# - update_build.sh
+req_scripts: "/path/to/scripts"
+
+# Reference file for HRC check
+ref_file: "/path/to/reference_panel.txt"
+
+
+# ---------------------------------------------------------------------
+# BUILD MODE
+# ---------------------------------------------------------------------
+
+# Options: liftover | updatebuild | none
+# If omitted, mode is inferred from strand_chain_file
+mode: "liftover"
+
+# Used for updatebuild (strand file) OR liftover (chain file inference)
+strand_chain_file: "/path/to/file.chain"
+
+
+# ---------------------------------------------------------------------
+# QC PARAMETERS
+# ---------------------------------------------------------------------
+
+mind: 0.05
+geno: 0.05
+maf: 0.01
+hwe: 1e-6
+
+
+# ---------------------------------------------------------------------
+# CHROMOSOME OPTIONS
+# ---------------------------------------------------------------------
+
+include_chrX: false
+include_mt: false
+extra_chroms: []
+
+
+# ---------------------------------------------------------------------
+# OPTIONAL
+# ---------------------------------------------------------------------
+
+pop: "ALL"

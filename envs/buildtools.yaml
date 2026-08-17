@@ -1,0 +1,11 @@
+name: buildtools
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - plink=1.9
+  - perl
+  - bcftools
+  - gawk
+  - coreutils
